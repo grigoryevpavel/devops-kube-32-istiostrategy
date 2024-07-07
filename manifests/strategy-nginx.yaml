@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  generation: 1
+  labels:
+    app: strategy-nginx
+  name: strategy-nginx
+  namespace: test 
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 5 
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 60%
+      maxUnavailable: 60% 
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: strategy-nginx 
+  template:
+    metadata: 
+      labels:
+        app: strategy-nginx
+    spec:      
+      containers:
+      - image: nginx:1.19
+        imagePullPolicy: IfNotPresent 
+        name: strategy-nginx  
+      - image: wbitt/network-multitool
+        imagePullPolicy: IfNotPresent 
+        name: manual-pv-multitool
+        env:
+        - name: HTTP_PORT
+          value: "1180"
+        - name: HTTPS_PORT
+          value: "11443"
+        ports:
+        - containerPort: 1180
+          name: http
+        - containerPort: 11443
+          name: https  
+       
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always  
+      terminationGracePeriodSeconds: 0

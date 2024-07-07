@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: strategyapp 
+  namespace: test
+  labels:
+    app: strategyapp
+spec:
+  selector:
+    app: strategy-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:  
+  labels:
+    app: strategy-appv1 
+  name: strategy-appv1
+  namespace: test 
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: strategy-app
+      version: v1 
+  template:
+    metadata: 
+      labels:
+        app: strategy-app
+        version: v1
+    spec:      
+      containers:
+      - image: nginx:1.19
+        imagePullPolicy: IfNotPresent 
+        name: strategy-appv1    
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always  
+      terminationGracePeriodSeconds: 0
